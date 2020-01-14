@@ -58,11 +58,11 @@ ssh-keygen -t rsa -b 4096
 4. Add the pubkey to your private git repo where your customized version of Certwatch will live
 
 ## Clone Certwatch to Your Private Repo
-- Clone windows-certwatch **in `C:\`** -- `git clone https://yourprivategitrepo.git Certwatch` – the Certwatch reference after the clone URL instructs git to 'rename' the destination.  No path means it'll clone to the repo name in the directory your CLI is focused in.  
+- [Clone watch.ps1](scripts/watch.ps1) **in `C:\`** -- `git clone https://yourprivategitrepo.git Certwatch` – the Certwatch reference after the clone URL instructs git to 'rename' the destination.  No path means it'll clone to the repo name in the directory your CLI is focused in.  
 
 You want the final destination to be: C:\Certwatch
 
-Open `watch.ps1` and change any necessary config variables.  
+Open [watch.ps1](scripts/watch.ps1) and change any necessary config variables.  
 
 Anything changed in `watch.ps1` means you'll either lose them or have to revert if you try to pull at any point in the future.  The config should eventually be moved to a standalone file outside of the git repo at some point. (Which is the entire purpose of setting up git, for the time being)
 
