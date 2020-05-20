@@ -35,3 +35,8 @@ I left a sample of popular applications like Synology, Snipeit, PRTG and Papercu
 In modern versions of certbot on Ubuntu/Debian, you don't need to specify the post-renewal hooks in your `certbot renew` cron, just the presence of scripts in this directory should see them run after a successful renewal.
 
 The post-renewal scripts will take a copy of the **live** certificate created by Let's Encrypt, rename & convert (if necessary) for its destination server.
+
+## Potential Bugs after Setup
+Depending on your naming scheme for the `/etc/letsencrypt/renewal-hooks/deploy` scripts, if the primary cert directory you're pulling from (ie. `/home/syncthing/example.com/` if you go by the [nginx](https://github.com/angela-d/letsencrypt-intranet-automation/blob/master/scripts/renewal-hooks/deploy/nginx.sh) example) doesn't get updated **before** nginx.sh runs, you'll run into a chicken and egg situation; so you'll want to ensure the renewal scripts are ordered accordingly.. something like 01-primary.sh, 02-nginx.sh)
+
+An alternative approach is to simply copy from `/etc/letsencrypt/live/example.com/cert.pem` and so on.
