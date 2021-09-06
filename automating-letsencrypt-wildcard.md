@@ -118,7 +118,7 @@ apt install certbot python3-certbot-dns-rfc2136 -t stretch-backports
 
 Create a config file that will be used by Certbot:
 ```bash
-mkdir -p /root/.secret/certbot && pico rfc2136.ini
+mkdir -p /root/.secrets/certbot && pico rfc2136.ini
 ```
 
 Paste the following into `rfc2136.ini`
@@ -145,3 +145,49 @@ certbot certonly --dns-rfc2136 --dns-rfc2136-credentials /root/.secrets/certbot/
 You should now have a wildcard SSL certificate from Let's Encrypt!
 
 To automate, build a cron at `crontab -e` (as root/sudo) with **certbot renew**
+
+***
+
+## Troubleshooting
+`certbot renew` cron fails:
+
+First thing to try is a **dry run** on the distribution server:
+```bash
+certbot certonly --dry-run -vvv --dns-rfc2136 --dns-rfc2136-credentials /root/.secrets/certbot/rfc2136.ini -d example.com,*.example.com --preferred-challenges dns-01 --dns-rfc2136-propagation-seconds 5
+```
+
+> Performing the following challenges:
+>
+> dns-01 challenge for example.com
+>
+> No authoritative SOA record found for _acme-challenge.example.com
+>
+> No authoritative SOA record found for example.com
+>
+> No authoritative SOA record found for com
+>
+> Encountered exception:
+>
+> Traceback (most recent call last):
+>
+> ... python traceback errors
+
+The authoritative record isn't being updated, which is what the automation process is supposed to take care of.
+
+### Next Place to Look
+On the public-facing DNS server:
+```bash
+grep "zone" -R /var/log
+```
+
+Here's the problem:
+```text
+/var/log/syslog:Sep  6 14:16:29 ns named[6658]: zone example.com/IN: journal rollforward failed: journal out of sync with zone
+/var/log/syslog:Sep  6 14:16:29 ns named[6658]: zone example.com/IN: not loaded due to errors.
+```
+
+The zone was updated manually at some point between the last successful renewal and now, causing the bind setup to get out of sync.
+
+Fix:
+- Remove it: `rm /etc/bind/db.example.com.jnl`
+- Restart Bind: `service bind9 restart`
