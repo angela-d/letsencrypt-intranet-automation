@@ -17,7 +17,7 @@ Operating Systems in Use:
 
 Create a key:
 
-**On Ubuntu 16.04, generating a key with dnssec-keygen will take forever.  Using /dev/urandom will significantly speed up the process.  Run this as a non-root / non-sudo user.**
+**On Ubuntu 16.04 (was in use at the time of documenting), generating a key with dnssec-keygen will take forever.  Using /dev/urandom will significantly speed up the process.  Run this as a non-root / non-sudo user.**
 ```bash
 dnssec-keygen  -r /dev/urandom -a HMAC-SHA512 -b 512 -n HOST example.com
 ```
