@@ -6,8 +6,8 @@ Topology:
 - **Distribution Server** - The intranet server that generates, accepts and disperses the certs (the latter part isn't part of these notes at this time)
 
 Operating Systems in Use:
-- Bind Server: Ubuntu 16.04
-- Distribution Server: Debian 9
+- Bind Server: Ubuntu
+- Distribution Server: Debian
 
 
 ***
